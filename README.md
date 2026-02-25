@@ -1,16 +1,32 @@
-# Javascript implementation of esptool
+# CaTeIM Jade DIY Flasher
 
-This repository contains a Javascript implementation of [esptool](https://github.com/espressif/esptool), a serial flasher utility for Espressif chips. Unlike the Python-based esptool, `esptool-js` doesn't implement generation of binary images out of ELF files, and doesn't include companion tools similar to [espefuse.py](https://github.com/espressif/esptool/wiki/espefuse) and [espsecure.py](https://github.com/espressif/esptool/wiki/espsecure).
+A web-based flasher utility for **Jade DIY** hardware wallets built on ESP32 boards.
 
-`esptool-js` is based on [Web Serial API](https://wicg.github.io/serial/) and works in Google Chrome and Microsoft Edge, [version 89 or later](https://developer.mozilla.org/en-US/docs/Web/API/Serial#browser_compatibility).
+## Supported Boards
 
-## Live demo
+| Board               | Chip     |
+| ------------------- | -------- |
+| LILYGO T-Display    | ESP32    |
+| LILYGO T-Display S3 | ESP32-S3 |
+| Waveshare ESP32-S3  | ESP32-S3 |
 
-Visit https://espressif.github.io/esptool-js/ to see this tool in action.
+## How It Works
 
-## Testing it locally
+1. Open the [CaTeIM Jade DIY Flasher](https://cateim.github.io/jadediyflasher/) in Chrome or Edge
+2. Select your **board**
+3. Select the **firmware version**
+4. Click **Flash Firmware** and select the serial port
+5. Wait for the flash to complete
 
-```
+> **Note:** This tool uses the [Web Serial API](https://developer.mozilla.org/en-US/docs/Web/API/Serial) and only works in Chromium-based browsers (Chrome, Edge 89+).
+
+## ⚠ Warning
+
+This tool does **not** enable secure boot or flash encryption on DIY devices.
+
+## Development
+
+```bash
 npm install
 npm run build
 python3 -m http.server 8008

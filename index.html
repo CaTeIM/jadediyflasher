@@ -1,72 +1,270 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Blockstream Jade DIY Flasher</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.19.0/css/xterm.css">
-        <link
-            href="https://fonts.googleapis.com/css?family=Orbitron"
-            rel="stylesheet"
-        />
-         <script src="https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.min.js"></script>
-         <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
-         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    </head>
-    <body>
-        <h1 align="center"><p>Blockstream Jade DIY</p></h1>
-        <h4 align="center">A Flasher utility for Jade DIY</h4>
-        <h4 align="center">Warning: This tool does not and cannot enable secure boot and flash encryption on the DIY devices</h4>
-        <div id="safariErr" style="display:none"><p align="center" style="color:red">This tool is not supported on Safari browser!</p>
-        </div>
-        <div class="container" id="main">
-            <hr/>
-            <div id="program">
-                <h3 id="jadediyversion">Jade DIY</h3>
-                <label for="dyimodels" id="lbldiymodels">Model:</label>
-                <select name="diymodelsel" id="diymodelsel">
-		    <option value="m5blackgray">M5Stack Black/Gray</option>
-		    <option value="m5fire">M5Stack FIRE</option>
-		    <option value="m5core2">M5Stack Core2</option>
-		    <option value="m5cores3">M5Stack Core S3</option>
-		    <option value="m5stickcplus">M5StickC PLUS</option>
-		    <option value="m5stickcplus2">M5StickC PLUS2</option>
-		    <option value="tdisplay">LILYGO T-Display</option>
-		    <option value="tdisplays3">LILYGO T-DisplayS3</option>
-		    <option value="tdisplays3procamera">LILYGO T-DisplayS3 Pro Camera</option>
-		    <option value="twatchs3">T-Watch S3</option>
-		    <option value="esp32-cam">ESP32-Cam</option>
-		    <option value="esp32-wrover-cam">ESP32-Wrover-cam</option>
-		    <option value="tcameraplus">T-Camera Plus</option>
-                    <option value="jade">Jade (dev board)</option>
-                    <option value="jade_v1_1">Jade v1.1 (dev board)</option>
-                    <option value="jade_v2">Jade v2 (dev board)</option> 
-                </select>
+  <head>
+    <meta charset="utf-8" />
+    <title>CaTeIM Jade DIY Flasher</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.19.0/css/xterm.css" />
+    <style>
+      /* Hacker Theme - inspired by pages-themes/hacker */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-                <input class="btn btn-info btn-sm" type="button" id="connectButton" value="Flash" />
-                <br>
-                <hr/>
+      body {
+        background-color: #151515;
+        color: #e8e8e8;
+        font-family: "Monaco", "Menlo", "Consolas", "Courier New", monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #39d353;
+        font-size: 2em;
+        text-align: center;
+        margin-bottom: 4px;
+        text-shadow: 0 0 10px rgba(57, 211, 83, 0.3);
+      }
+
+      h3 {
+        color: #39d353;
+        font-size: 1.1em;
+        margin-bottom: 10px;
+      }
+
+      h4 {
+        color: #999;
+        text-align: center;
+        font-weight: normal;
+        font-size: 0.9em;
+        margin-bottom: 6px;
+      }
+
+      hr {
+        border: 0;
+        border-top: 1px solid #333;
+        margin: 20px 0;
+      }
+
+      label {
+        color: #39d353;
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+      }
+
+      select {
+        background-color: #1a1a1a;
+        color: #39d353;
+        border: 1px solid #333;
+        padding: 8px 12px;
+        font-family: inherit;
+        font-size: 14px;
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 3px;
+        cursor: pointer;
+        outline: none;
+      }
+
+      select:hover {
+        border-color: #39d353;
+      }
+      select:focus {
+        border-color: #39d353;
+        box-shadow: 0 0 5px rgba(57, 211, 83, 0.3);
+      }
+
+      .btn-flash:disabled {
+        background-color: #2a4d30;
+        color: #555;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+
+      .btn-flash {
+        background-color: #39d353;
+        color: #151515;
+        border: none;
+        padding: 10px 30px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 3px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.2s ease;
+        width: 100%;
+        margin-top: 5px;
+      }
+
+      .btn-flash:hover {
+        background-color: #2ebc47;
+        box-shadow: 0 0 15px rgba(57, 211, 83, 0.4);
+      }
+
+      .btn-flash:active {
+        transform: scale(0.98);
+      }
+
+      progress {
+        width: 100%;
+        height: 20px;
+        margin-bottom: 5px;
+        border: 1px solid #333;
+        border-radius: 3px;
+        background-color: #1a1a1a;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      progress::-webkit-progress-bar {
+        background-color: #1a1a1a;
+        border-radius: 3px;
+      }
+      progress::-webkit-progress-value {
+        background-color: #39d353;
+        border-radius: 3px;
+      }
+      progress::-moz-progress-bar {
+        background-color: #39d353;
+        border-radius: 3px;
+      }
+
+      .progress-label {
+        color: #999;
+        font-size: 0.85em;
+        margin-bottom: 3px;
+      }
+
+      #success {
+        color: #39d353;
+        text-align: center;
+        margin-top: 15px;
+        text-shadow: 0 0 10px rgba(57, 211, 83, 0.3);
+      }
+
+      .error-text {
+        color: #e85353;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .selector-group {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+
+      .selector-group .field {
+        flex: 1;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 30px;
+        color: #555;
+        font-size: 0.8em;
+      }
+
+      .footer a {
+        color: #39d353;
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>CaTeIM Jade DIY</h1>
+      <h4>Flasher utility for Jade DIY hardware wallets</h4>
+      <h4>⚠ This tool does not enable secure boot or flash encryption on DIY devices</h4>
+
+      <div id="safariErr" style="display: none">
+        <p class="error-text">This tool is not supported on Safari browser!</p>
+      </div>
+
+      <div id="main">
+        <hr />
+        <div id="program">
+          <h3 id="jadediyversion">Firmware Version</h3>
+
+          <div class="selector-group">
+            <div class="field">
+              <label for="boardsel" id="lblboard">Board:</label>
+              <select name="boardsel" id="boardsel">
+                <option value="" disabled selected>— Selecione a board —</option>
+                <option value="tdisplay">LILYGO T-Display</option>
+                <option value="tdisplays3">LILYGO T-Display S3</option>
+                <option value="waveshares3">Waveshare S3 Touch LCD 2</option>
+              </select>
             </div>
-            <label for="bootloaderprogress" id="bootloaderprogresslbl" style="display:none;" >Bootloader</label>
-            <progress id="bootloaderprogress" value="0" max="100" style="width: 100%; display:none"></progress>
-            <label for="partitiontableprogress" id="partitiontableprogresslbl" style="display:none;">Partition Table</label>
-            <progress id="partitiontableprogress" value="0" max="100" style="width: 100%; display:none"></progress>
-            <label for="otaprogress" id="otaprogresslbl" style="display:none;">OTA initial data</label>
-            <progress id="otaprogress" value="0" max="100" style="width: 100%; display:none"></progress>
-            <label for="jadeprogress" id="jadeprogresslbl" style="display:none;">Jade firmware</label>
-            <progress id="jadeprogress" value="0" max="100" style="width: 100%; display:none"></progress>
-            <h3 id="success"></h3>
-        <script src="index.js" type="module"></script>
-        <script>
-            // Safari 3.0+ "[object HTMLElementConstructor]"
-            var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || (typeof safari !== 'undefined' && window['safari'].pushNotification));
+            <div class="field">
+              <label for="fwsel" id="lblfw">Firmware:</label>
+              <select name="fwsel" id="fwsel">
+                <!-- populated by JS -->
+              </select>
+            </div>
+          </div>
 
-            if(isSafari)
-            {
-               document.getElementById("safariErr").style.display = "inline";
-               document.getElementById("main").style.display = "none";
-            }
-        </script>
-    </body>
+          <input class="btn-flash" type="button" id="connectButton" value="⚡ Flash Firmware" disabled />
+          <hr />
+        </div>
+
+        <label for="bootloaderprogress" id="bootloaderprogresslbl" class="progress-label" style="display: none"
+          >Bootloader</label
+        >
+        <progress id="bootloaderprogress" value="0" max="100" style="display: none"></progress>
+
+        <label for="partitiontableprogress" id="partitiontableprogresslbl" class="progress-label" style="display: none"
+          >Partition Table</label
+        >
+        <progress id="partitiontableprogress" value="0" max="100" style="display: none"></progress>
+
+        <label for="otaprogress" id="otaprogresslbl" class="progress-label" style="display: none"
+          >OTA initial data</label
+        >
+        <progress id="otaprogress" value="0" max="100" style="display: none"></progress>
+
+        <label for="jadeprogress" id="jadeprogresslbl" class="progress-label" style="display: none"
+          >Jade firmware</label
+        >
+        <progress id="jadeprogress" value="0" max="100" style="display: none"></progress>
+
+        <h3 id="success"></h3>
+      </div>
+
+      <div class="footer">
+        <p>Powered by <a href="https://github.com/CaTeIM/jadediyflasher" target="_blank">CaTeIM</a></p>
+      </div>
+    </div>
+
+    <script src="index.js" type="module"></script>
+    <script>
+      var isSafari =
+        /constructor/i.test(window.HTMLElement) ||
+        (function (p) {
+          return p.toString() === "[object SafariRemoteNotification]";
+        })(!window["safari"] || (typeof safari !== "undefined" && window["safari"].pushNotification));
+      if (isSafari) {
+        document.getElementById("safariErr").style.display = "inline";
+        document.getElementById("main").style.display = "none";
+      }
+    </script>
+  </body>
 </html>
