@@ -4,11 +4,11 @@ A web-based flasher utility for **Jade DIY** hardware wallets built on ESP32 boa
 
 ## Supported Boards
 
-| Board               | Chip     |
-| ------------------- | -------- |
-| LILYGO T-Display    | ESP32    |
-| LILYGO T-Display S3 | ESP32-S3 |
-| Waveshare ESP32-S3  | ESP32-S3 |
+| Board                    | Chip     |
+| ------------------------ | -------- |
+| LILYGO T-Display         | ESP32    |
+| LILYGO T-Display S3      | ESP32-S3 |
+| Waveshare S3 Touch LCD 2 | ESP32-S3 |
 
 ## How It Works
 

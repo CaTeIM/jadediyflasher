@@ -405,7 +405,7 @@ for /d %%D in ("%boardAssetsDir%\*") do (
 )
 
 if "%fwCount%"=="0" (
-    echo   (nenhum firmware encontrado)
+    echo   [!] nenhum firmware encontrado
     echo.
     pause
     cls
