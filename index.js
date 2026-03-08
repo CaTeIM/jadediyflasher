@@ -11,6 +11,36 @@ const jadeprogressBar = document.getElementById("jadeprogress");
 const jadeprogressBarLbl = document.getElementById("jadeprogresslbl");
 const lblboard = document.getElementById("lblboard");
 const lblfw = document.getElementById("lblfw");
+const flashCountEl = document.getElementById("flashCount");
+
+// Abacus Counter API (free, no registration)
+const ABACUS_URL = "https://abacus.jasoncameron.dev";
+const COUNTER_NS = "cateim-jadediy";
+const COUNTER_KEY = "flash-count";
+
+async function loadFlashCount() {
+  try {
+    const res = await fetch(`${ABACUS_URL}/get/${COUNTER_NS}/${COUNTER_KEY}`);
+    if (res.ok) {
+      const data = await res.json();
+      flashCountEl.textContent = data.value.toLocaleString("pt-BR");
+    }
+  } catch (_) {
+    flashCountEl.textContent = "—";
+  }
+}
+
+async function incrementFlashCount() {
+  try {
+    const res = await fetch(`${ABACUS_URL}/hit/${COUNTER_NS}/${COUNTER_KEY}`);
+    if (res.ok) {
+      const data = await res.json();
+      flashCountEl.textContent = data.value.toLocaleString("pt-BR");
+    }
+  } catch (_) {}
+}
+
+loadFlashCount();
 
 import * as esptooljs from "./bundle.js";
 const ESPLoader = esptooljs.ESPLoader;
@@ -194,4 +224,7 @@ connectButton.onclick = async () => {
       chip: chip || "unknown",
     });
   }
+
+  // Increment visible counter
+  await incrementFlashCount();
 };
