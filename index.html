@@ -4,6 +4,14 @@
     <meta charset="utf-8" />
     <title>CaTeIM Jade DIY Flasher</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.19.0/css/xterm.css" />
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLBNPGJQSJ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-XLBNPGJQSJ');
+    </script>
     <style>
       /* Hacker Theme - inspired by pages-themes/hacker */
       * {
@@ -186,15 +194,19 @@
         text-decoration: underline;
       }
 
-      .flash-counter {
-        margin-top: 10px;
-        color: #39d353;
+      .boot-hint {
+        border: 1px solid #333;
+        background-color: #1a1a1a;
+        border-radius: 3px;
+        padding: 10px 14px;
+        margin-bottom: 12px;
+        color: #999;
         font-size: 0.85em;
-        opacity: 0.7;
+        line-height: 1.5;
       }
 
-      .flash-counter span {
-        font-weight: bold;
+      .boot-hint strong {
+        color: #e8c84a;
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.min.js"></script>
@@ -233,6 +245,10 @@
             </div>
           </div>
 
+          <div class="boot-hint">
+            <strong>⚠ Antes de clicar em Flash:</strong> coloque o dispositivo em <strong>modo bootloader</strong>.<br />
+            Segure o botão <strong>BOOT</strong> enquanto conecta o cabo USB ao computador. Solte após conectar.
+          </div>
           <input class="btn-flash" type="button" id="connectButton" value="⚡ Flash Firmware" disabled />
           <hr />
         </div>
@@ -262,7 +278,6 @@
 
       <div class="footer">
         <p>Powered by <a href="https://github.com/CaTeIM/jadediyflasher" target="_blank">CaTeIM</a></p>
-        <p class="flash-counter">⚡ Flashes realizados: <span id="flashCount">...</span></p>
       </div>
     </div>
 

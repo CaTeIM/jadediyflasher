@@ -11,36 +11,6 @@ const jadeprogressBar = document.getElementById("jadeprogress");
 const jadeprogressBarLbl = document.getElementById("jadeprogresslbl");
 const lblboard = document.getElementById("lblboard");
 const lblfw = document.getElementById("lblfw");
-const flashCountEl = document.getElementById("flashCount");
-
-// Counter API
-const COUNTER_NS = "cateim-jadediy";
-const COUNTER_KEY = "flash-count";
-const COUNTER_URL = `https://api.counterapi.dev/v1/${COUNTER_NS}/${COUNTER_KEY}`;
-
-async function loadFlashCount() {
-  try {
-    const res = await fetch(COUNTER_URL);
-    if (res.ok) {
-      const data = await res.json();
-      flashCountEl.textContent = data.count.toLocaleString("pt-BR");
-    }
-  } catch (_) {
-    flashCountEl.textContent = "—";
-  }
-}
-
-async function incrementFlashCount() {
-  try {
-    const res = await fetch(COUNTER_URL + "/up");
-    if (res.ok) {
-      const data = await res.json();
-      flashCountEl.textContent = data.count.toLocaleString("pt-BR");
-    }
-  } catch (_) {}
-}
-
-loadFlashCount();
 
 import * as esptooljs from "./bundle.js";
 const ESPLoader = esptooljs.ESPLoader;
@@ -104,7 +74,12 @@ function updateFirmwareOptions() {
 
 function updateVersionLabel() {
   const fw = fwsel.value || "";
-  document.getElementById("jadediyversion").innerHTML = fw ? "Firmware Version: " + fw : "Firmware Version";
+  const lbl = document.getElementById("jadediyversion");
+  if (fw) {
+    lbl.innerHTML = '<span style="color:#999; font-weight:normal">Firmware Version: </span>' + fw;
+  } else {
+    lbl.innerHTML = '<span style="color:#999; font-weight:normal">Firmware Version</span>';
+  }
   connectButton.disabled = !fw;
 }
 
@@ -209,5 +184,14 @@ connectButton.onclick = async () => {
   await transport.setDTR(true);
   document.getElementById("success").innerHTML =
     "Successfully flashed CaTeIM Jade DIY " + firmware + " on " + boardNames[board];
-  await incrementFlashCount();
+
+  // Google Analytics: track flash event
+  if (typeof gtag === "function") {
+    gtag("event", "flash_success", {
+      board: board,
+      board_name: boardNames[board],
+      firmware_version: firmware,
+      chip: chip || "unknown",
+    });
+  }
 };
