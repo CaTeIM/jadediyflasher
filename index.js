@@ -53,9 +53,9 @@ let esploader;
 
 // Board → available firmware versions (newest first)
 const boardFirmwares = {
-  tdisplay: ["1.0.39-beta2", "1.0.38-98", "1.0.38"],
-  tdisplays3: ["1.0.39-beta2", "1.0.38-98", "1.0.38"],
-  waveshares3: ["1.0.39-beta2", "1.0.38-98"],
+  tdisplay: ["1.0.39", "1.0.38-98", "1.0.38"],
+  tdisplays3: ["1.0.39", "1.0.38-98", "1.0.38"],
+  waveshares3: ["1.0.39", "1.0.38-98"],
 };
 
 // Board display names
