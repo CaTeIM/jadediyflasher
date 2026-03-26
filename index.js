@@ -1,4 +1,4 @@
-﻿const boardsel = document.getElementById("boardsel");
+const boardsel = document.getElementById("boardsel");
 const fwsel = document.getElementById("fwsel");
 const connectButton = document.getElementById("connectButton");
 const btprogressBar = document.getElementById("bootloaderprogress");
@@ -129,6 +129,14 @@ connectButton.onclick = async () => {
   boardsel.style.display = "none";
   fwsel.style.display = "none";
 
+  const successEl = document.getElementById("success");
+  successEl.style.color = "#e8c84a"; // yellow color while flashing
+  successEl.innerHTML = "Flashing CaTeIM Jade DIY " + firmware + " on " + boardNames[board] + "...";
+
+  // Hide the boot-hint element
+  const bootHint = document.querySelector(".boot-hint");
+  if (bootHint) bootHint.style.display = "none";
+
   if (device === null) {
     device = await navigator.serial.requestPort({});
     transport = new Transport(device);
@@ -212,7 +220,8 @@ connectButton.onclick = async () => {
   await transport.setDTR(false);
   await new Promise((resolve) => setTimeout(resolve, 100));
   await transport.setDTR(true);
-  document.getElementById("success").innerHTML =
+  successEl.style.color = "#39d353"; // revert to green
+  successEl.innerHTML =
     "Successfully flashed CaTeIM Jade DIY " + firmware + " on " + boardNames[board];
 
   // Google Analytics: track flash event
@@ -227,4 +236,9 @@ connectButton.onclick = async () => {
 
   // Increment visible counter
   await incrementFlashCount();
+
+  // Reload after 3 seconds to return to the install screen
+  setTimeout(() => {
+    window.location.reload();
+  }, 3000);
 };

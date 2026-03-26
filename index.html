@@ -219,6 +219,11 @@
       .flash-counter span {
         font-weight: bold;
       }
+
+      #jadediyversion {
+        color:#999;
+        font-weight:normal
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
@@ -258,7 +263,8 @@
 
           <div class="boot-hint">
             <strong>⚠ Antes de clicar em Flash:</strong> coloque o dispositivo em <strong>modo bootloader</strong>.<br />
-            Segure o botão <strong>BOOT</strong> enquanto conecta o cabo USB ao computador. Solte após conectar.
+            Segure o botão <strong>BOOT</strong> enquanto conecta o cabo USB ao computador. Clique em <strong>FLASH
+              FIRMWARE</strong> e solte o botão <strong>BOOT</strong> após o início do flash.
           </div>
           <input class="btn-flash" type="button" id="connectButton" value="⚡ Flash Firmware" disabled />
           <hr />
