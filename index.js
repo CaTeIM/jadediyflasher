@@ -104,12 +104,6 @@ function updateFirmwareOptions() {
 
 function updateVersionLabel() {
   const fw = fwsel.value || "";
-  const lbl = document.getElementById("jadediyversion");
-  if (fw) {
-    lbl.innerHTML = '<span style="color:#999; font-weight:normal">Firmware Version: </span>' + fw;
-  } else {
-    lbl.innerHTML = '<span style="color:#999; font-weight:normal">Firmware Version</span>';
-  }
   connectButton.disabled = !fw;
 }
 
@@ -131,7 +125,7 @@ connectButton.onclick = async () => {
 
   const successEl = document.getElementById("success");
   successEl.style.color = "#e8c84a"; // yellow color while flashing
-  successEl.innerHTML = "Flashing CaTeIM Jade DIY " + firmware + " on " + boardNames[board] + "...";
+  successEl.innerHTML = "Flashing Firmware " + firmware + " on " + boardNames[board] + "...";
 
   // Hide the boot-hint element
   const bootHint = document.querySelector(".boot-hint");
