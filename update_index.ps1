@@ -31,8 +31,9 @@ if (-not (Test-Path $IndexJs)) {
     exit 1
 }
 
-# Le o arquivo inteiro preservando as quebras de linha originais
-$text = Get-Content -LiteralPath $IndexJs -Raw
+# Le o arquivo inteiro como UTF-8 (NAO usar Get-Content -Raw: no PowerShell 5.1
+# ele decodifica UTF-8 sem BOM como ANSI/CP1252 e corrompe travessoes/acentos)
+$text = [System.IO.File]::ReadAllText($IndexJs, [System.Text.Encoding]::UTF8)
 
 # Captura o array da board: grupo 1 = "  board: [", grupo 2 = conteudo, grupo 3 = "]"
 # (?sm): '.' inclui quebras de linha e '^' casa inicio de linha -> suporta array multi-linha
