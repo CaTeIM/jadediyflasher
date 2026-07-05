@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <title>CaTeIM Jade DIY Flasher</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.19.0/css/xterm.css" />
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XLBNPGJQSJ"></script>
     <script>
@@ -224,9 +223,107 @@
         color:#999;
         font-weight:normal
       }
+
+      /* Support / donation panel */
+      .support {
+        border: 1px solid #333;
+        background-color: #1a1a1a;
+        border-radius: 3px;
+        padding: 16px;
+        margin-top: 24px;
+        text-align: center;
+      }
+
+      .support-title {
+        color: #39d353;
+        font-size: 1em;
+        margin-bottom: 12px;
+      }
+
+      .store-cta {
+        display: inline-block;
+        color: #151515;
+        background-color: #39d353;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 8px 18px;
+        border-radius: 3px;
+        font-size: 0.9em;
+        margin-top: 18px;
+        transition: all 0.2s ease;
+      }
+
+      .store-cta:hover {
+        background-color: #2ebc47;
+        box-shadow: 0 0 15px rgba(57, 211, 83, 0.4);
+      }
+
+      .donate-grid {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .donate-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .donate-label {
+        color: #999;
+        font-size: 0.8em;
+      }
+
+      .donate-qr {
+        width: 140px;
+        height: 140px;
+        background: #fff;
+        padding: 6px;
+        border-radius: 4px;
+        display: block;
+      }
+
+      .copy-btn {
+        background-color: #151515;
+        color: #39d353;
+        border: 1px solid #333;
+        border-radius: 3px;
+        padding: 6px 10px;
+        font-family: inherit;
+        font-size: 0.78em;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        transition: border-color 0.2s ease;
+      }
+
+      .copy-btn:hover {
+        border-color: #39d353;
+      }
+
+      .copy-btn .addr-short {
+        color: #e8e8e8;
+        letter-spacing: 0.5px;
+      }
+
+      .copy-btn .copy-icon {
+        color: #999;
+        font-size: 0.95em;
+      }
+
+      .copy-btn.copied {
+        border-color: #39d353;
+      }
+
+      .copy-btn.copied .copy-icon {
+        color: #39d353;
+      }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/xterm@4.19.0/lib/xterm.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.js"></script>
   </head>
   <body>
     <div class="container">
@@ -235,8 +332,10 @@
       <h4>⚠ This tool does not enable secure boot or flash encryption on DIY devices</h4>
       <h4>⚠ Only use if you know what you are doing. Possible risk of damaging the board if used incorrectly.</h4>
 
-      <div id="safariErr" style="display: none">
-        <p class="error-text">This tool is not supported on Safari browser!</p>
+      <div id="unsupportedErr" style="display: none">
+        <p class="error-text">
+          This browser does not support Web Serial. Please use Chrome, Edge or Opera on desktop.
+        </p>
       </div>
 
       <div id="main">
@@ -293,6 +392,57 @@
         <h3 id="success"></h3>
       </div>
 
+      <div class="support">
+        <p class="support-title">💚 Curtiu? Apoie o projeto</p>
+        <div class="donate-grid">
+          <div class="donate-item">
+            <span class="donate-label">BTC (on-chain)</span>
+            <img
+              class="donate-qr"
+              src="assets/donate/btc.svg"
+              alt="QR code do endereço BTC on-chain"
+              width="140"
+              height="140"
+              loading="lazy"
+            />
+            <button
+              type="button"
+              class="copy-btn"
+              data-addr="bc1qtktxatpmuz9leete3wekguh7s2wkfxydzwqzpn"
+              data-label="BTC"
+              aria-label="Copiar endereço BTC"
+            >
+              <span class="addr-short">bc1qtktx…zwqzpn</span>
+              <span class="copy-icon">⧉ copiar</span>
+            </button>
+          </div>
+          <div class="donate-item">
+            <span class="donate-label">Liquid — LBTC / DePix</span>
+            <img
+              class="donate-qr"
+              src="assets/donate/liquid.svg"
+              alt="QR code do endereço Liquid (LBTC e DePix)"
+              width="140"
+              height="140"
+              loading="lazy"
+            />
+            <button
+              type="button"
+              class="copy-btn"
+              data-addr="lq1qqwhz388wkl8xe8dh6zggwh22xyyvfntkfxtzux4964ttkpamr6act2r6rjmsmqkasen4ulehyp2pfvg44w7c5ydqj63d7vkce"
+              data-label="Liquid"
+              aria-label="Copiar endereço Liquid (LBTC / DePix)"
+            >
+              <span class="addr-short">lq1qqwhz…d7vkce</span>
+              <span class="copy-icon">⧉ copiar</span>
+            </button>
+          </div>
+        </div>
+        <a class="store-cta" href="https://store.selflabs.org/?FL7K2QX9M3" target="_blank" rel="noopener noreferrer"
+          >🛒 Compre sua Jade DIY com 21% de desconto</a
+        >
+      </div>
+
       <div class="footer">
         <p>Powered by <a href="https://github.com/CaTeIM/jadediyflasher" target="_blank">CaTeIM</a></p>
         <p class="flash-counter">⚡ Flashes realizados: <span id="flashCount">...</span></p>
@@ -301,13 +451,9 @@
 
     <script src="index.js" type="module"></script>
     <script>
-      var isSafari =
-        /constructor/i.test(window.HTMLElement) ||
-        (function (p) {
-          return p.toString() === "[object SafariRemoteNotification]";
-        })(!window["safari"] || (typeof safari !== "undefined" && window["safari"].pushNotification));
-      if (isSafari) {
-        document.getElementById("safariErr").style.display = "inline";
+      // Web Serial is required; unsupported browsers (Safari, Firefox, mobile) get a notice.
+      if (!("serial" in navigator)) {
+        document.getElementById("unsupportedErr").style.display = "inline";
         document.getElementById("main").style.display = "none";
       }
     </script>

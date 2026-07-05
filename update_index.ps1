@@ -31,39 +31,33 @@ if (-not (Test-Path $IndexJs)) {
     exit 1
 }
 
-$lines = Get-Content $IndexJs
-$out = New-Object System.Collections.Generic.List[string]
-$updated = $false
-$dup = $false
+# Le o arquivo inteiro preservando as quebras de linha originais
+$text = Get-Content -LiteralPath $IndexJs -Raw
 
-# Pattern: linha com a board no objeto boardFirmwares
-$pat = '^\s*' + [regex]::Escape($Board) + ':\s*\['
-# Check duplicata
-$dupPat = [regex]::Escape('"' + $Version + '"')
-# Replace: insere nova versao no inicio do array
-$replPat = '^(\s*' + [regex]::Escape($Board) + ':\s*\[)'
-$newPrefix = '$1"' + $Version + '", '
+# Captura o array da board: grupo 1 = "  board: [", grupo 2 = conteudo, grupo 3 = "]"
+# (?sm): '.' inclui quebras de linha e '^' casa inicio de linha -> suporta array multi-linha
+$pattern = '(?sm)^([ \t]*' + [regex]::Escape($Board) + '\s*:\s*\[)(.*?)(\])'
+$match = [regex]::Match($text, $pattern)
 
-foreach ($line in $lines) {
-    if ($line -match $pat) {
-        if ($line -match $dupPat) {
-            $dup = $true
-        }
-        else {
-            $line = $line -replace $replPat, $newPrefix
-            $updated = $true
-        }
-    }
-    [void]$out.Add($line)
-}
-
-if ($updated) {
-    $out | Set-Content $IndexJs -Encoding UTF8
-    Write-Host "  [OK] index.js atualizado: $Board agora inclui versao $Version"
-}
-elseif ($dup) {
-    Write-Host "  [INFO] Versao $Version ja existe em $Board, nenhuma alteracao necessaria"
-}
-else {
+if (-not $match.Success) {
     Write-Host "  [AVISO] Board '$Board' nao encontrada no boardFirmwares do index.js"
+    exit 1
 }
+
+$inner = $match.Groups[2].Value
+$versions = @([regex]::Matches($inner, '"([^"]*)"') | ForEach-Object { $_.Groups[1].Value })
+
+if ($versions -contains $Version) {
+    Write-Host "  [INFO] Versao $Version ja existe em $Board, nenhuma alteracao necessaria"
+    exit 0
+}
+
+# Nova versao entra no inicio (mais recente primeiro)
+$newList = @($Version) + $versions
+$newInner = ($newList | ForEach-Object { '"' + $_ + '"' }) -join ', '
+$newSegment = $match.Groups[1].Value + $newInner + $match.Groups[3].Value
+$newText = $text.Substring(0, $match.Index) + $newSegment + $text.Substring($match.Index + $match.Length)
+
+# Grava UTF-8 SEM BOM, preservando as quebras de linha originais
+[System.IO.File]::WriteAllText($IndexJs, $newText, (New-Object System.Text.UTF8Encoding($false)))
+Write-Host "  [OK] index.js atualizado: $Board agora inclui versao $Version"

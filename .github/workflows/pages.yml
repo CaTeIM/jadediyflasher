@@ -36,12 +36,16 @@ jobs:
       - name: Build project
         run: |
           npm run build
+      - name: Prune files not meant for the public site
+        run: |
+          rm -rf node_modules .git
+          rm -f deploy_firmware.bat update_index.ps1 delete_index.ps1 run.sh
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          # Upload entire repository
+          # Upload the pruned repository (see the prune step above)
           path: '.'
       - name: Deploy to GitHub Pages
         id: deployment

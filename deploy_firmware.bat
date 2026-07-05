@@ -3,15 +3,6 @@
 chcp 65001 > NUL
 setlocal enabledelayedexpansion
 
-:: Elevar privilégios automaticamente
-net session >nul 2>&1
-if %errorLevel% neq 0 (
-    echo Elevando privilégios para administrador...
-    powershell -Command "Start-Process -FilePath '%COMSPEC%' -ArgumentList '/c %~f0' -Verb runAs"
-    exit /b
-)
-
-@echo off
 REM Script para automatizar o deploy e gestão de firmwares CaTeIM Jade DIY
 REM
 REM COMO USAR:
@@ -300,6 +291,14 @@ set "updateScript=%githubDir%\update_index.ps1"
 
 powershell -NoProfile -ExecutionPolicy Bypass -File "%updateScript%" -Board "%placaNome%" -Version "%versao%" -IndexJs "%indexJs%"
 
+if errorlevel 1 (
+    echo.
+    echo [ERRO] Falha ao atualizar o index.js ^(binarios copiados, versao NAO adicionada^).
+    echo        Verifique o update_index.ps1 antes de publicar.
+    echo.
+    pause
+)
+
 echo.
 echo ========================================
 echo Deploy Concluido!
@@ -499,6 +498,14 @@ set "indexJs=%githubDir%\index.js"
 set "deleteScript=%githubDir%\delete_index.ps1"
 
 powershell -NoProfile -ExecutionPolicy Bypass -File "%deleteScript%" -Board "%placaNome%" -Version "%versaoApagar%" -IndexJs "%indexJs%"
+
+if errorlevel 1 (
+    echo.
+    echo [ERRO] Falha ao atualizar o index.js ^(a pasta foi apagada, mas a versao
+    echo        pode continuar listada^). Verifique o delete_index.ps1.
+    echo.
+    pause
+)
 
 echo.
 echo ========================================
