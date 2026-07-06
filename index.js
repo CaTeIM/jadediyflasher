@@ -55,7 +55,7 @@ let esploader;
 const boardFirmwares = {
   tdisplay: ["1.0.40-100", "1.0.39", "1.0.38-98", "1.0.38"],
   tdisplays3: ["1.0.40-100", "1.0.39", "1.0.38-98", "1.0.38"],
-  waveshares3: ["1.0.40-100", "1.0.39", "1.0.38-98"],
+  waveshares3: ["1.0.39", "1.0.38-98"],
 };
 
 // Board display names
